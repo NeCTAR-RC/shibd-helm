@@ -1,8 +1,0 @@
-shibd:
-  entity_id: 'https://my-sp.example.org/shibboleth'
-  remote_user: 'eppn persistent-id'
-  session_lifetime: 28800
-  session_timeout: 3600
-  handlerSSL: true
-  cookieProps: 'https'
-  consistentAddress: true

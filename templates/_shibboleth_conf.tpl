@@ -12,8 +12,8 @@
     -->
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
-    <ApplicationDefaults entityID="{{ .Values.shibd.entity_id }}"
-        REMOTE_USER="{{ .Values.shibd.remote_user }}"
+    <ApplicationDefaults entityID="{{ .Values.shibd.entity_id | default "https://my-sp.example.org/shibboleth" }}"
+        REMOTE_USER="{{ .Values.shibd.remote_user | default "eppn persistent-id" }}"
         cipherSuites="DEFAULT:!EXP:!LOW:!aNULL:!eNULL:!DES:!IDEA:!SEED:!RC4:!3DES:!kRSA:!SSLv2:!SSLv3:!TLSv1:!TLSv1.1">
 
         <!--
@@ -24,9 +24,9 @@
         cookieProps to "https" for SSL-only sites. Note that while we default checkAddress to
         "false", this makes an assertion stolen in transit easier for attackers to misuse.
         -->
-        <Sessions lifetime="{{ .Values.shibd.session_lifetime }}" timeout="{{ .Values.shibd.session_timeout }}" relayState="ss:mem"
-                  checkAddress="false" handlerSSL="{{ .Values.shibd.handlerSSL }}" cookieProps="{{ .Values.shibd.cookieProps }}"
-                  consistentAddress="{{ .Values.shibd.consistentAddress }}">
+        <Sessions lifetime="{{ .Values.shibd.session_lifetime | default 28800 }}" timeout="{{ .Values.shibd.session_timeout | default 3600 }}" relayState="ss:mem"
+                  checkAddress="false" handlerSSL="{{ .Values.shibd.handlerSSL | default true }}" cookieProps="{{ .Values.shibd.cookieProps | default "https" }}"
+                  consistentAddress="{{ .Values.shibd.consistentAddress | default true }}">
 
             <!--
             Configures SSO for a default IdP. To properly allow for >1 IdP, remove
