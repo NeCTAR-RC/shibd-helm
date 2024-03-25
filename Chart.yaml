@@ -1,0 +1,5 @@
+apiVersion: v2
+name: shibd
+description: Library chart for shibd
+type: library
+version: 1.0.0
