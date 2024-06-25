@@ -40,17 +40,17 @@
             <!-- SAML and local-only logout. -->
             <Logout>SAML2 Local</Logout>
 
-            <SessionInitiator type="Chaining" Location="/DS-AAF" id="DS-AAF" relayState="cookie">
+            <SessionInitiator type="Chaining" Location="/DS-AAF" id="DS-AAF">
               <SessionInitiator type="SAML2" acsIndex="1" template="bindingTemplate.html"/>
               <SessionInitiator type="SAMLDS" URL="https://ds.aaf.edu.au/discovery/DS"/>
             </SessionInitiator>
 
-            <SessionInitiator type="Chaining" Location="/DS-Tuakiri" id="DS-Tuakiri" relayState="cookie">
+            <SessionInitiator type="Chaining" Location="/DS-Tuakiri" id="DS-Tuakiri">
               <SessionInitiator type="SAML2" acsIndex="1" template="bindingTemplate.html"/>
               <SessionInitiator type="SAMLDS" URL="https://directory.tuakiri.ac.nz/ds/DS"/>
             </SessionInitiator>
 
-            <SessionInitiator type="Chaining" Location="/UniMelb" id="UniMelb" relayState="cookie"
+            <SessionInitiator type="Chaining" Location="/UniMelb" id="UniMelb"
                               entityID="https://idp.unimelb.edu.au/idp/shibboleth">
               <SessionInitiator type="SAML2" acsIndex="1" template="bindingTemplate.html"/>
             </SessionInitiator>
