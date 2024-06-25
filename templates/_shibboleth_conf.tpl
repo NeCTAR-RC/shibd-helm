@@ -1,15 +1,29 @@
 {{- define "shibboleth2-conf" }}
+{{- $storage_id := "mem" -}}
 <SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
     xmlns:conf="urn:mace:shibboleth:3.0:native:sp:config"
     clockSkew="180">
 
-    <OutOfProcess tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a" />
+    <OutOfProcess tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a">
+        <Extensions>
+            <Library path="memcache-store.so" fatal="true"/>
+        </Extensions>
+    </OutOfProcess>
     <UnixListener address="/var/run/shibboleth/shibd.sock"/>
 
     <!--
     By default, in-memory StorageService, ReplayCache, ArtifactMap, and SessionCache
     are used. See example-shibboleth2.xml for samples of explicitly configuring them.
     -->
+
+    {{- if .Values.shibd.memcached_servers }}
+    {{- $storage_id = "mc" -}}
+    <StorageService type="MEMCACHE" id="mc" prefix="sp-{{ .Release.Name }}:" buildMap="1">
+      <Hosts>
+        {{ join "," .Values.shibd.memcached_servers }}
+      </Hosts>
+    </StorageService>
+    {{- end }}
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
     <ApplicationDefaults entityID="{{ .Values.shibd.entity_id | default "https://my-sp.example.org/shibboleth" }}"
@@ -24,7 +38,7 @@
         cookieProps to "https" for SSL-only sites. Note that while we default checkAddress to
         "false", this makes an assertion stolen in transit easier for attackers to misuse.
         -->
-        <Sessions lifetime="{{ .Values.shibd.session_lifetime | default 28800 }}" timeout="{{ .Values.shibd.session_timeout | default 3600 }}" relayState="ss:mem"
+        <Sessions lifetime="{{ .Values.shibd.session_lifetime | default 28800 }}" timeout="{{ .Values.shibd.session_timeout | default 3600 }}" relayState="ss:{{ $storage_id }}"
                   checkAddress="false" handlerSSL="{{ .Values.shibd.handlerSSL | default true }}" cookieProps="{{ .Values.shibd.cookieProps | default "https" }}"
                   consistentAddress="{{ .Values.shibd.consistentAddress | default true }}">
 
