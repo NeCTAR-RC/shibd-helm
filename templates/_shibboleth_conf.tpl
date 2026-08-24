@@ -40,6 +40,7 @@
         -->
         <Sessions lifetime="{{ .Values.shibd.session_lifetime | default 28800 }}" timeout="{{ .Values.shibd.session_timeout | default 3600 }}" relayState="ss:{{ $storage_id }}"
                   checkAddress="false" handlerSSL="{{ .Values.shibd.handlerSSL | default true }}" cookieProps="{{ .Values.shibd.cookieProps | default "https" }}"
+                  redirectLimit="{{ .Values.shibd.redirectLimit | default "exact" }}"
                   consistentAddress="{{ .Values.shibd.consistentAddress | default true }}">
 
             <!--
@@ -99,9 +100,9 @@
                           backingFilePath="metadata.aaf.xml" maxRefreshDelay="7200">
           <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
           <MetadataFilter type="Signature" certificate="/etc/shibboleth/aafcert.pem" verifyBackup="false"/>
-          <DiscoveryFilter type="Blacklist" matcher="EntityAttributes" trimTags="true"
+          <DiscoveryFilter type="Exclude" matcher="EntityAttributes" trimTags="true"
                            attributeName="http://macedir.org/entity-category"
-                           attributeNameFormat="urn:oasis:names:tc:SAML:3.0:attrname-format:uri"
+                           attributeNameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
                            attributeValue="http://refeds.org/category/hide-from-discovery" />
         </MetadataProvider>
 
@@ -110,9 +111,9 @@
                           backingFilePath="metadata.tuakiri.xml" maxRefreshDelay="7200">
           <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
           <MetadataFilter type="Signature" certificate="/etc/shibboleth/tuakiricert.pem" verifyBackup="false"/>
-          <DiscoveryFilter type="Blacklist" matcher="EntityAttributes" trimTags="true"
+          <DiscoveryFilter type="Exclude" matcher="EntityAttributes" trimTags="true"
                            attributeName="http://macedir.org/entity-category"
-                           attributeNameFormat="urn:oasis:names:tc:SAML:3.0:attrname-format:uri"
+                           attributeNameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
                            attributeValue="http://refeds.org/category/hide-from-discovery" />
         </MetadataProvider>
 
